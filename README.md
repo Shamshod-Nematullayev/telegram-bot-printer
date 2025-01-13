@@ -1,49 +1,49 @@
 # Telegram Printer Bot
 
-Bu bot Telegram orqali PDF fayllarni qabul qilib, avtomatik ravishda printerni ishga tushiradi va qog'ozga chiqaradi.
+This bot receives PDF files via Telegram, automatically sends them to a printer, and prints them.
 
-## Xususiyatlari
+## Features
 
-- Faqatgina ma'lum foydalanuvchi ID uchun ishlaydi.
-- Faqat PDF formatidagi hujjatlarni qabul qiladi.
-- Printerning nomini belgilash imkoniyati mavjud.
-- Chop etish jarayoni haqida foydalanuvchini xabardor qiladi (qabul qilindi, chop etilmoqda, chop etildi yoki xato yuz berdi).
+- Works only for a specific user ID.
+- Accepts only PDF format documents.
+- Allows setting the printer name.
+- Notifies the user about the printing process (received, printing, printed, or an error occurred).
 
 ---
 
-## Talablar
+## Requirements
 
-Quyidagi vositalar va modullar o'rnatilgan bo'lishi kerak:
+The following tools and modules must be installed:
 
-- **Node.js** (v14 yoki undan yuqori)
+- **Node.js** (v14 or higher)
 - **npm** (Node Package Manager)
-- Printer sozlangan va o'rnatilgan bo'lishi kerak.
+- A configured and installed printer.
 
 ---
 
-## O'rnatish
+## Installation
 
-1. Repositoriyani klonlang:
+1. Clone the repository:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/Shamshod-Nematullayev/telegram-bot-printer.git
    cd telegram-printer-bot
    ```
 
-2. Zarur modullarni o'rnating:
+2. Install the required modules:
 
    ```bash
    npm install
    ```
 
-3. Muhit o'zgaruvchisini sozlang: `.env` fayl yarating va Telegram bot tokeningizni kiriting:
+3. Set up the environment variable: Create a `.env` file and add your Telegram bot token:
 
    ```
    BOT_TOKEN=your_telegram_bot_token
    ```
 
-4. Printer nomini o'zgartirish (agar kerak bo'lsa):\
-   Kodning quyidagi qismini tahrirlang va printeringiz nomini kiriting:
+4. Update the printer name (if necessary):
+   Edit the following part of the code and enter your printer's name:
 
    ```javascript
    await print(tempFilePath, {
@@ -51,7 +51,7 @@ Quyidagi vositalar va modullar o'rnatilgan bo'lishi kerak:
    });
    ```
 
-5. Fayllarni saqlash uchun `uploads` papkasini yarating:
+5. Create the `uploads` directory for saving files:
 
    ```bash
    mkdir uploads
@@ -59,9 +59,9 @@ Quyidagi vositalar va modullar o'rnatilgan bo'lishi kerak:
 
 ---
 
-## Ishga tushirish
+## Running the Bot
 
-Botni ishga tushirish uchun quyidagi buyruqni bajaring:
+To start the bot, run the following command:
 
 ```bash
 node index.js
@@ -69,34 +69,34 @@ node index.js
 
 ---
 
-## Foydalanish
+## Usage
 
-1. Botga ulaning va PDF formatidagi hujjatni yuboring.
-2. Bot javob beradi:
-   - **"Qabul qilindi"**: Fayl muvaffaqiyatli yuklandi.
-   - **"Chop etilmoqda"**: Fayl printerga yuborilmoqda.
-   - **"Fayl chop etildi"**: Fayl muvaffaqiyatli chop etildi.
-   - **"Xatolik kuzatildi"**: Chop etishda muammo yuzaga keldi.
+1. Connect to the bot and send a document in PDF format.
+2. The bot will respond with the following statuses:
+   - **"Received"**: The file has been successfully uploaded.
+   - **"Printing"**: The file is being sent to the printer.
+   - **"File printed"**: The file has been successfully printed.
+   - **"An error occurred"**: There was an issue during the printing process.
 
 ---
 
-## Xatoliklarni bartaraf etish
+## Troubleshooting
 
-- **"Siz bu xizmatga ulanmagansiz"**: Botga ulanishga ruxsat berilgan foydalanuvchilar ro‘yxatiga kiritilmadingiz. Kodning quyidagi qismini tahrir qiling:
+- **"You are not authorized for this service"**: You are not in the list of users allowed to access the bot. Edit the following part of the code:
   ```javascript
-  const user_id = 5347896070; // Bu yerga o'z ID'ingizni kiriting
+  const user_id = 5347896070; // Replace this with your own ID
   ```
-- **Chop etish ishlamaydi**: Printer nomi to‘g‘ri kiritilganligini tekshiring.
-- **Uploads papkasi mavjud emas**: Kod chop etilishdan oldin vaqtinchalik faylni saqlaydi, shuning uchun `uploads` papkasi yaratilgan bo‘lishi kerak.
+- **Printing fails**: Ensure the printer name is correctly specified.
+- **Uploads directory missing**: The bot saves temporary files before printing, so ensure the `uploads` directory is created.
 
 ---
 
-## Hissa qo‘shish
+## Contributing
 
-Hissa qo‘shish uchun `fork` qiling, o‘zgartirish kiriting va `pull request` yuboring.
+To contribute, fork the repository, make your changes, and submit a pull request.
 
 ---
 
-## Muallif
+## Author
 
 - Shamshod Ne'matullayev
