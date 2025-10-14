@@ -3,11 +3,16 @@ const { print } = require("pdf-to-printer");
 const { Telegraf } = require("telegraf");
 const path = require("path");
 const fs = require("fs");
-const user_id = 5347896070; // Bu yerga o'z ID'ingizni kiriting
+const { PDFDocument } = require("pdf-lib");
+const user_id = [5347896070, 6000992564]; // Bu yerga o'z ID'ingizni kiriting
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use((ctx, next) => {
-  if (ctx.from.id === user_id) {
+  if (user_id.includes(ctx.from.id)) {
     next();
   } else {
     ctx.reply("Siz bu xizmatga ulanmagansiz");
@@ -28,21 +33,49 @@ bot.on("document", async (ctx) => {
     const pdfBuffer = response.data; // Bu PDF buffer
     const tempFilePath = path.join("uploads", "temp.pdf"); // Vaqtinchalik fayl yo'li
     fs.writeFileSync(tempFilePath, pdfBuffer);
-    ctx.telegram.editMessageText(
-      ctx.chat.id,
-      msg.message_id,
-      1,
-      "Chop etilmoqda"
-    );
-    await print(tempFilePath, {
-      printer: "Canon MF3010",
-    });
-    ctx.telegram.editMessageText(
-      ctx.chat.id,
-      msg.message_id,
-      1,
-      "Fayl chop etildi"
-    );
+    const pdfDoc = await PDFDocument.load(pdfBuffer);
+    const pageCount = pdfDoc.getPageCount();
+
+    if (pageCount <= 20) {
+      ctx.telegram.editMessageText(
+        ctx.chat.id,
+        msg.message_id,
+        1,
+        "Chop etilmoqda"
+      );
+      await print(tempFilePath, {
+        printer: "Canon MF3010",
+      });
+
+      await delay(5000 + pageCount * 4000);
+      ctx.telegram.editMessageText(
+        ctx.chat.id,
+        msg.message_id,
+        1,
+        "Fayl chop etildi"
+      );
+    } else {
+      for (let i = 0; i < pageCount; i += 20) {
+        let lastPage = i + 20 > pageCount ? pageCount : i + 20;
+        ctx.telegram.editMessageText(
+          ctx.chat.id,
+          msg.message_id,
+          1,
+          `Chop etilmoqda ${i + 1}-${lastPage}/${pageCount}`
+        );
+        await print(tempFilePath, {
+          printer: "Canon MF3010",
+          pages: `${i + 1}-${lastPage}`,
+        });
+        await delay(20 * 4000 + 5000 + 1000 * 60);
+      }
+      ctx.telegram.editMessageText(
+        ctx.chat.id,
+        msg.message_id,
+        1,
+        `Fayl chop etildi`
+      );
+    }
   } catch (error) {
     ctx.telegram.editMessageText(
       ctx.chat.id,
