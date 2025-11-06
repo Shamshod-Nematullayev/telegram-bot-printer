@@ -4,7 +4,8 @@
   "description": "This bot can solve problems to print pdf documents. If you should to print PDF files from your other device you can use this bot.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "telegram-bot-printer",
